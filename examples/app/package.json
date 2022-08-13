@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm esbuild src/** --bundle --outdir=www",
+    "dev": "myfrontframe dev",
+    "serve": "cd www && serve"
+  },
+  "dependencies": {
+    "myfrontframe": "workspace:*",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^13.0.2"
+  }
+}
