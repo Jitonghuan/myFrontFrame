@@ -6,12 +6,11 @@
   "bin": {
     "myfrontframe": "bin/myfrontframe.js"
   },
-
   "scripts": {
     "build": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild",
+    "build:client": "pnpm esbuild ./client/** --outdir=lib/client --bundle --external:esbuild",
     "dev": "pnpm build -- --watch"
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Jitonghuan/myFrontFrame.git"
@@ -26,7 +25,8 @@
   "dependencies": {
     "babel-standalone": "^6.26.0",
     "commander": "^9.4.0",
+    "esbuild": "^0.14.36",
     "express": "^4.18.1",
-    "esbuild": "^0.14.36"
+    "ws": "^8.8.1"
   }
 }

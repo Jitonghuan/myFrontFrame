@@ -33,11 +33,13 @@ importers:
       commander: ^9.4.0
       esbuild: ^0.14.36
       express: ^4.18.1
+      ws: ^8.8.1
     dependencies:
       babel-standalone: 6.26.0
       commander: 9.4.0
       esbuild: 0.14.54
       express: 4.18.1
+      ws: 8.8.1
 
 packages:
 
@@ -1232,3 +1234,16 @@ packages:
   /wrappy/1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
     dev: true
+
+  /ws/8.8.1:
+    resolution: {integrity: sha512-bGy2JzvzkPowEJV++hF07hAD6niYSr0JzBNo/J29WsB57A2r7Wlc1UFcTR9IzrPvuNVO4B8LGqF8qcpsVOhJCA==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
