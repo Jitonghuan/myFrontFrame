@@ -1,9 +1,7 @@
 import express from 'express';
 import portfinder from 'portfinder';
-import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
-import { serve, build } from 'esbuild';
-import type { ServeOnRequestArgs } from 'esbuild';
+import { build } from 'esbuild';
 import path from "path";
 import { createWebSocketServer } from './server';
 import { DEFAULT_ENTRY_POINT, DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST, DEFAULT_BUILD_PORT } from './constants';
@@ -31,12 +29,13 @@ export const dev = async () => {
                 <span>loading...</span>
             </div>
             <script src="/${DEFAULT_OUTDIR}/index.js"></script>
-            <script src="/myFrontFrame/client.js"></script>
+            <script src="/myfrontframe/client.js"></script>
         </body>
         </html>`);
     });
     app.use(`/${DEFAULT_OUTDIR}`, express.static(esbuildOutput));
-    app.use(`/myFrontFrame`, express.static(path.resolve(__dirname, 'client')));
+    app.use(`/myfrontframe`, express.static(path.resolve(__dirname, 'client')));
+    console.log("__dirname",__dirname)
 
     const myfrontframeServe = createServer(app);
     const ws = createWebSocketServer(myfrontframeServe);

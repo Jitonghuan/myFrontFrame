@@ -15,4 +15,7 @@ npx tsc --init
 pnpm i esbuild -w -D
 5、服务端渲染的原理：将项目构建成 html 字符串，然后返回给浏览器。
 
+6、框架构建 pnpm build
+   npm 发布 ：npm publish version 0.0.3
+
 
