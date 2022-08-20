@@ -4,6 +4,7 @@ function getSocketHost() {
     const isHttps = url.protocol === 'https:';
     return `${isHttps ? 'wss' : 'ws'}://${host}`;
 }
+console.log("getSocketHost()",getSocketHost())
 if ('WebSocket' in window) {
     const socket = new WebSocket(getSocketHost(), 'myfrontframe-hmr');
     let pingTimer: NodeJS.Timer | null = null;
@@ -20,6 +21,7 @@ if ('WebSocket' in window) {
     async function waitForSuccessfulPing(ms = 1000) {
         while (true) {
             try {
+                debugger
                 await fetch(`/__myfrontframe_ping`);
                 break;
             } catch (e) {

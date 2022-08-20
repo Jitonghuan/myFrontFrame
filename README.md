@@ -3,7 +3,7 @@
  * @Date: 2022-08-13 21:27:58
  * @LastEditors: muxi.jth 2016670689@qq.com
  * @LastEditTime: 2022-08-13 23:01:27
- * @FilePath: /myFrontFrame/README.md
+ * @FilePath: /myfrontframe/README.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 1、其实 babel 的实现原理非常简单，就是通过将代码转换成抽象语法书 (AST)，再转换成目标语法1

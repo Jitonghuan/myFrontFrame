@@ -6,15 +6,15 @@
   "1 error pnpm": {
     "errno": 1,
     "code": "ELIFECYCLE",
-    "pkgid": "myfrontframe@0.0.2",
-    "stage": "dev",
-    "script": "pnpm build -- --watch",
+    "pkgid": "myfrontframe@0.0.4",
+    "stage": "build",
+    "script": "pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild",
     "pkgname": "myfrontframe",
     "err": {
       "name": "pnpm",
-      "message": "myfrontframe@0.0.2 dev: `pnpm build -- --watch`\nExit status 1",
+      "message": "myfrontframe@0.0.4 build: `pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild`\nExit status 1",
       "code": "ELIFECYCLE",
-      "stack": "pnpm: myfrontframe@0.0.2 dev: `pnpm build -- --watch`\nExit status 1\n    at EventEmitter.<anonymous> (/snapshot/dist/pnpm.cjs)\n    at EventEmitter.emit (events.js:376:20)\n    at ChildProcess.<anonymous> (/snapshot/dist/pnpm.cjs)\n    at ChildProcess.emit (events.js:376:20)\n    at maybeClose (internal/child_process.js:1055:16)\n    at Process.ChildProcess._handle.onexit (internal/child_process.js:288:5)"
+      "stack": "pnpm: myfrontframe@0.0.4 build: `pnpm esbuild ./src/** --bundle --outdir=lib --platform=node --external:esbuild`\nExit status 1\n    at EventEmitter.<anonymous> (/snapshot/dist/pnpm.cjs)\n    at EventEmitter.emit (events.js:376:20)\n    at ChildProcess.<anonymous> (/snapshot/dist/pnpm.cjs)\n    at ChildProcess.emit (events.js:376:20)\n    at maybeClose (internal/child_process.js:1055:16)\n    at Process.ChildProcess._handle.onexit (internal/child_process.js:288:5)"
     }
   },
   "2 warn pnpm:global": " Local package.json exists, but node_modules missing, did you mean to install?"

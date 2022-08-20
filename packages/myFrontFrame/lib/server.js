@@ -26,6 +26,111 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
+// ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/stream.js
+var require_stream = __commonJS({
+  "../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/stream.js"(exports, module2) {
+    "use strict";
+    var { Duplex } = require("stream");
+    function emitClose(stream) {
+      stream.emit("close");
+    }
+    function duplexOnEnd() {
+      if (!this.destroyed && this._writableState.finished) {
+        this.destroy();
+      }
+    }
+    function duplexOnError(err) {
+      this.removeListener("error", duplexOnError);
+      this.destroy();
+      if (this.listenerCount("error") === 0) {
+        this.emit("error", err);
+      }
+    }
+    function createWebSocketStream2(ws, options) {
+      let terminateOnDestroy = true;
+      const duplex = new Duplex({
+        ...options,
+        autoDestroy: false,
+        emitClose: false,
+        objectMode: false,
+        writableObjectMode: false
+      });
+      ws.on("message", function message(msg, isBinary) {
+        const data = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+        if (!duplex.push(data))
+          ws.pause();
+      });
+      ws.once("error", function error(err) {
+        if (duplex.destroyed)
+          return;
+        terminateOnDestroy = false;
+        duplex.destroy(err);
+      });
+      ws.once("close", function close() {
+        if (duplex.destroyed)
+          return;
+        duplex.push(null);
+      });
+      duplex._destroy = function(err, callback) {
+        if (ws.readyState === ws.CLOSED) {
+          callback(err);
+          process.nextTick(emitClose, duplex);
+          return;
+        }
+        let called = false;
+        ws.once("error", function error(err2) {
+          called = true;
+          callback(err2);
+        });
+        ws.once("close", function close() {
+          if (!called)
+            callback(err);
+          process.nextTick(emitClose, duplex);
+        });
+        if (terminateOnDestroy)
+          ws.terminate();
+      };
+      duplex._final = function(callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open() {
+            duplex._final(callback);
+          });
+          return;
+        }
+        if (ws._socket === null)
+          return;
+        if (ws._socket._writableState.finished) {
+          callback();
+          if (duplex._readableState.endEmitted)
+            duplex.destroy();
+        } else {
+          ws._socket.once("finish", function finish() {
+            callback();
+          });
+          ws.close();
+        }
+      };
+      duplex._read = function() {
+        if (ws.isPaused)
+          ws.resume();
+      };
+      duplex._write = function(chunk, encoding, callback) {
+        if (ws.readyState === ws.CONNECTING) {
+          ws.once("open", function open() {
+            duplex._write(chunk, encoding, callback);
+          });
+          return;
+        }
+        ws.send(chunk, callback);
+      };
+      duplex.on("end", duplexOnEnd);
+      duplex.on("error", duplexOnError);
+      return duplex;
+    }
+    module2.exports = createWebSocketStream2;
+  }
+});
+
 // ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/constants.js
 var require_constants = __commonJS({
   "../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/constants.js"(exports, module2) {
@@ -639,7 +744,7 @@ var require_receiver = __commonJS({
     var GET_MASK = 3;
     var GET_DATA = 4;
     var INFLATING = 5;
-    var Receiver = class extends Writable {
+    var Receiver2 = class extends Writable {
       constructor(options = {}) {
         super();
         this._binaryType = options.binaryType || BINARY_TYPES[0];
@@ -1043,7 +1148,7 @@ var require_receiver = __commonJS({
         this._state = GET_INFO;
       }
     };
-    module2.exports = Receiver;
+    module2.exports = Receiver2;
     function error(ErrorCtor, message, prefix, statusCode, errorCode) {
       const err = new ErrorCtor(
         prefix ? `Invalid WebSocket frame: ${message}` : message
@@ -1069,7 +1174,7 @@ var require_sender = __commonJS({
     var { mask: applyMask, toBuffer } = require_buffer_util();
     var kByteLength = Symbol("kByteLength");
     var maskBuffer = Buffer.alloc(4);
-    var Sender = class {
+    var Sender2 = class {
       constructor(socket, extensions, generateMask) {
         this._extensions = extensions || {};
         if (generateMask) {
@@ -1180,7 +1285,7 @@ var require_sender = __commonJS({
         if (this._deflating) {
           this.enqueue([this.dispatch, buf, false, options, cb]);
         } else {
-          this.sendFrame(Sender.frame(buf, options), cb);
+          this.sendFrame(Sender2.frame(buf, options), cb);
         }
       }
       ping(data, mask, cb) {
@@ -1210,7 +1315,7 @@ var require_sender = __commonJS({
         if (this._deflating) {
           this.enqueue([this.dispatch, data, false, options, cb]);
         } else {
-          this.sendFrame(Sender.frame(data, options), cb);
+          this.sendFrame(Sender2.frame(data, options), cb);
         }
       }
       pong(data, mask, cb) {
@@ -1240,7 +1345,7 @@ var require_sender = __commonJS({
         if (this._deflating) {
           this.enqueue([this.dispatch, data, false, options, cb]);
         } else {
-          this.sendFrame(Sender.frame(data, options), cb);
+          this.sendFrame(Sender2.frame(data, options), cb);
         }
       }
       send(data, options, cb) {
@@ -1287,7 +1392,7 @@ var require_sender = __commonJS({
           }
         } else {
           this.sendFrame(
-            Sender.frame(data, {
+            Sender2.frame(data, {
               [kByteLength]: byteLength,
               fin: options.fin,
               generateMask: this._generateMask,
@@ -1303,7 +1408,7 @@ var require_sender = __commonJS({
       }
       dispatch(data, compress, options, cb) {
         if (!compress) {
-          this.sendFrame(Sender.frame(data, options), cb);
+          this.sendFrame(Sender2.frame(data, options), cb);
           return;
         }
         const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
@@ -1327,7 +1432,7 @@ var require_sender = __commonJS({
           this._bufferedBytes -= options[kByteLength];
           this._deflating = false;
           options.readOnly = false;
-          this.sendFrame(Sender.frame(buf, options), cb);
+          this.sendFrame(Sender2.frame(buf, options), cb);
           this.dequeue();
         });
       }
@@ -1353,7 +1458,7 @@ var require_sender = __commonJS({
         }
       }
     };
-    module2.exports = Sender;
+    module2.exports = Sender2;
   }
 });
 
@@ -1678,8 +1783,8 @@ var require_websocket = __commonJS({
     var { Readable } = require("stream");
     var { URL } = require("url");
     var PerMessageDeflate = require_permessage_deflate();
-    var Receiver = require_receiver();
-    var Sender = require_sender();
+    var Receiver2 = require_receiver();
+    var Sender2 = require_sender();
     var {
       BINARY_TYPES,
       EMPTY_BUFFER,
@@ -1700,7 +1805,7 @@ var require_websocket = __commonJS({
     var protocolVersions = [8, 13];
     var readyStates = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
     var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
-    var WebSocket = class extends EventEmitter {
+    var WebSocket2 = class extends EventEmitter {
       constructor(address, protocols, options) {
         super();
         this._binaryType = BINARY_TYPES[0];
@@ -1712,7 +1817,7 @@ var require_websocket = __commonJS({
         this._extensions = {};
         this._paused = false;
         this._protocol = "";
-        this._readyState = WebSocket.CONNECTING;
+        this._readyState = WebSocket2.CONNECTING;
         this._receiver = null;
         this._sender = null;
         this._socket = null;
@@ -1778,14 +1883,14 @@ var require_websocket = __commonJS({
         return this._url;
       }
       setSocket(socket, head, options) {
-        const receiver = new Receiver({
+        const receiver = new Receiver2({
           binaryType: this.binaryType,
           extensions: this._extensions,
           isServer: this._isServer,
           maxPayload: options.maxPayload,
           skipUTF8Validation: options.skipUTF8Validation
         });
-        this._sender = new Sender(socket, this._extensions, options.generateMask);
+        this._sender = new Sender2(socket, this._extensions, options.generateMask);
         this._receiver = receiver;
         this._socket = socket;
         receiver[kWebSocket] = this;
@@ -1804,12 +1909,12 @@ var require_websocket = __commonJS({
         socket.on("data", socketOnData);
         socket.on("end", socketOnEnd);
         socket.on("error", socketOnError);
-        this._readyState = WebSocket.OPEN;
+        this._readyState = WebSocket2.OPEN;
         this.emit("open");
       }
       emitClose() {
         if (!this._socket) {
-          this._readyState = WebSocket.CLOSED;
+          this._readyState = WebSocket2.CLOSED;
           this.emit("close", this._closeCode, this._closeMessage);
           return;
         }
@@ -1817,23 +1922,23 @@ var require_websocket = __commonJS({
           this._extensions[PerMessageDeflate.extensionName].cleanup();
         }
         this._receiver.removeAllListeners();
-        this._readyState = WebSocket.CLOSED;
+        this._readyState = WebSocket2.CLOSED;
         this.emit("close", this._closeCode, this._closeMessage);
       }
       close(code, data) {
-        if (this.readyState === WebSocket.CLOSED)
+        if (this.readyState === WebSocket2.CLOSED)
           return;
-        if (this.readyState === WebSocket.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           const msg = "WebSocket was closed before the connection was established";
           return abortHandshake(this, this._req, msg);
         }
-        if (this.readyState === WebSocket.CLOSING) {
+        if (this.readyState === WebSocket2.CLOSING) {
           if (this._closeFrameSent && (this._closeFrameReceived || this._receiver._writableState.errorEmitted)) {
             this._socket.end();
           }
           return;
         }
-        this._readyState = WebSocket.CLOSING;
+        this._readyState = WebSocket2.CLOSING;
         this._sender.close(code, data, !this._isServer, (err) => {
           if (err)
             return;
@@ -1848,14 +1953,14 @@ var require_websocket = __commonJS({
         );
       }
       pause() {
-        if (this.readyState === WebSocket.CONNECTING || this.readyState === WebSocket.CLOSED) {
+        if (this.readyState === WebSocket2.CONNECTING || this.readyState === WebSocket2.CLOSED) {
           return;
         }
         this._paused = true;
         this._socket.pause();
       }
       ping(data, mask, cb) {
-        if (this.readyState === WebSocket.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data === "function") {
@@ -1867,7 +1972,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -1876,7 +1981,7 @@ var require_websocket = __commonJS({
         this._sender.ping(data || EMPTY_BUFFER, mask, cb);
       }
       pong(data, mask, cb) {
-        if (this.readyState === WebSocket.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof data === "function") {
@@ -1888,7 +1993,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -1897,7 +2002,7 @@ var require_websocket = __commonJS({
         this._sender.pong(data || EMPTY_BUFFER, mask, cb);
       }
       resume() {
-        if (this.readyState === WebSocket.CONNECTING || this.readyState === WebSocket.CLOSED) {
+        if (this.readyState === WebSocket2.CONNECTING || this.readyState === WebSocket2.CLOSED) {
           return;
         }
         this._paused = false;
@@ -1905,7 +2010,7 @@ var require_websocket = __commonJS({
           this._socket.resume();
       }
       send(data, options, cb) {
-        if (this.readyState === WebSocket.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           throw new Error("WebSocket is not open: readyState 0 (CONNECTING)");
         }
         if (typeof options === "function") {
@@ -1914,7 +2019,7 @@ var require_websocket = __commonJS({
         }
         if (typeof data === "number")
           data = data.toString();
-        if (this.readyState !== WebSocket.OPEN) {
+        if (this.readyState !== WebSocket2.OPEN) {
           sendAfterClose(this, data, cb);
           return;
         }
@@ -1931,47 +2036,47 @@ var require_websocket = __commonJS({
         this._sender.send(data || EMPTY_BUFFER, opts, cb);
       }
       terminate() {
-        if (this.readyState === WebSocket.CLOSED)
+        if (this.readyState === WebSocket2.CLOSED)
           return;
-        if (this.readyState === WebSocket.CONNECTING) {
+        if (this.readyState === WebSocket2.CONNECTING) {
           const msg = "WebSocket was closed before the connection was established";
           return abortHandshake(this, this._req, msg);
         }
         if (this._socket) {
-          this._readyState = WebSocket.CLOSING;
+          this._readyState = WebSocket2.CLOSING;
           this._socket.destroy();
         }
       }
     };
-    Object.defineProperty(WebSocket, "CONNECTING", {
+    Object.defineProperty(WebSocket2, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket.prototype, "CONNECTING", {
+    Object.defineProperty(WebSocket2.prototype, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket, "OPEN", {
+    Object.defineProperty(WebSocket2, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket.prototype, "OPEN", {
+    Object.defineProperty(WebSocket2.prototype, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket, "CLOSING", {
+    Object.defineProperty(WebSocket2, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket.prototype, "CLOSING", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket, "CLOSED", {
+    Object.defineProperty(WebSocket2, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
-    Object.defineProperty(WebSocket.prototype, "CLOSED", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
@@ -1984,10 +2089,10 @@ var require_websocket = __commonJS({
       "readyState",
       "url"
     ].forEach((property) => {
-      Object.defineProperty(WebSocket.prototype, property, { enumerable: true });
+      Object.defineProperty(WebSocket2.prototype, property, { enumerable: true });
     });
     ["open", "error", "close", "message"].forEach((method) => {
-      Object.defineProperty(WebSocket.prototype, `on${method}`, {
+      Object.defineProperty(WebSocket2.prototype, `on${method}`, {
         enumerable: true,
         get() {
           for (const listener of this.listeners(method)) {
@@ -2011,9 +2116,9 @@ var require_websocket = __commonJS({
         }
       });
     });
-    WebSocket.prototype.addEventListener = addEventListener;
-    WebSocket.prototype.removeEventListener = removeEventListener;
-    module2.exports = WebSocket;
+    WebSocket2.prototype.addEventListener = addEventListener;
+    WebSocket2.prototype.removeEventListener = removeEventListener;
+    module2.exports = WebSocket2;
     function initAsClient(websocket, address, protocols, options) {
       const opts = {
         protocolVersion: protocolVersions[1],
@@ -2195,7 +2300,7 @@ var require_websocket = __commonJS({
       });
       req.on("upgrade", (res, socket, head) => {
         websocket.emit("upgrade", res);
-        if (websocket.readyState !== WebSocket.CONNECTING)
+        if (websocket.readyState !== WebSocket2.CONNECTING)
           return;
         req = websocket._req = null;
         if (res.headers.upgrade.toLowerCase() !== "websocket") {
@@ -2263,7 +2368,7 @@ var require_websocket = __commonJS({
       req.end();
     }
     function emitErrorAndClose(websocket, err) {
-      websocket._readyState = WebSocket.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket.emit("error", err);
       websocket.emitClose();
     }
@@ -2279,7 +2384,7 @@ var require_websocket = __commonJS({
       return tls.connect(options);
     }
     function abortHandshake(websocket, stream, message) {
-      websocket._readyState = WebSocket.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       const err = new Error(message);
       Error.captureStackTrace(err, abortHandshake);
       if (stream.setHeader) {
@@ -2360,7 +2465,7 @@ var require_websocket = __commonJS({
       this.removeListener("close", socketOnClose);
       this.removeListener("data", socketOnData);
       this.removeListener("end", socketOnEnd);
-      websocket._readyState = WebSocket.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       let chunk;
       if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk = websocket._socket.read()) !== null) {
         websocket._receiver.write(chunk);
@@ -2382,7 +2487,7 @@ var require_websocket = __commonJS({
     }
     function socketOnEnd() {
       const websocket = this[kWebSocket];
-      websocket._readyState = WebSocket.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket._receiver.end();
       this.end();
     }
@@ -2391,115 +2496,10 @@ var require_websocket = __commonJS({
       this.removeListener("error", socketOnError);
       this.on("error", NOOP);
       if (websocket) {
-        websocket._readyState = WebSocket.CLOSING;
+        websocket._readyState = WebSocket2.CLOSING;
         this.destroy();
       }
     }
-  }
-});
-
-// ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/stream.js
-var require_stream = __commonJS({
-  "../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/lib/stream.js"(exports, module2) {
-    "use strict";
-    var { Duplex } = require("stream");
-    function emitClose(stream) {
-      stream.emit("close");
-    }
-    function duplexOnEnd() {
-      if (!this.destroyed && this._writableState.finished) {
-        this.destroy();
-      }
-    }
-    function duplexOnError(err) {
-      this.removeListener("error", duplexOnError);
-      this.destroy();
-      if (this.listenerCount("error") === 0) {
-        this.emit("error", err);
-      }
-    }
-    function createWebSocketStream(ws, options) {
-      let terminateOnDestroy = true;
-      const duplex = new Duplex({
-        ...options,
-        autoDestroy: false,
-        emitClose: false,
-        objectMode: false,
-        writableObjectMode: false
-      });
-      ws.on("message", function message(msg, isBinary) {
-        const data = !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
-        if (!duplex.push(data))
-          ws.pause();
-      });
-      ws.once("error", function error(err) {
-        if (duplex.destroyed)
-          return;
-        terminateOnDestroy = false;
-        duplex.destroy(err);
-      });
-      ws.once("close", function close() {
-        if (duplex.destroyed)
-          return;
-        duplex.push(null);
-      });
-      duplex._destroy = function(err, callback) {
-        if (ws.readyState === ws.CLOSED) {
-          callback(err);
-          process.nextTick(emitClose, duplex);
-          return;
-        }
-        let called = false;
-        ws.once("error", function error(err2) {
-          called = true;
-          callback(err2);
-        });
-        ws.once("close", function close() {
-          if (!called)
-            callback(err);
-          process.nextTick(emitClose, duplex);
-        });
-        if (terminateOnDestroy)
-          ws.terminate();
-      };
-      duplex._final = function(callback) {
-        if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open() {
-            duplex._final(callback);
-          });
-          return;
-        }
-        if (ws._socket === null)
-          return;
-        if (ws._socket._writableState.finished) {
-          callback();
-          if (duplex._readableState.endEmitted)
-            duplex.destroy();
-        } else {
-          ws._socket.once("finish", function finish() {
-            callback();
-          });
-          ws.close();
-        }
-      };
-      duplex._read = function() {
-        if (ws.isPaused)
-          ws.resume();
-      };
-      duplex._write = function(chunk, encoding, callback) {
-        if (ws.readyState === ws.CONNECTING) {
-          ws.once("open", function open() {
-            duplex._write(chunk, encoding, callback);
-          });
-          return;
-        }
-        ws.send(chunk, callback);
-      };
-      duplex.on("end", duplexOnEnd);
-      duplex.on("error", duplexOnError);
-      return duplex;
-    }
-    module2.exports = createWebSocketStream;
   }
 });
 
@@ -2564,7 +2564,7 @@ var require_websocket_server = __commonJS({
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
-    var WebSocket = require_websocket();
+    var WebSocket2 = require_websocket();
     var { GUID, kWebSocket } = require_constants();
     var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
     var RUNNING = 0;
@@ -2586,7 +2586,7 @@ var require_websocket_server = __commonJS({
           host: null,
           path: null,
           port: null,
-          WebSocket,
+          WebSocket: WebSocket2,
           ...options
         };
         if (options.port == null && !options.server && !options.noServer || options.port != null && (options.server || options.noServer) || options.server && options.noServer) {
@@ -2868,30 +2868,23 @@ var require_websocket_server = __commonJS({
   }
 });
 
-// ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/index.js
-var require_ws = __commonJS({
-  "../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/index.js"(exports, module2) {
-    "use strict";
-    var WebSocket = require_websocket();
-    WebSocket.createWebSocketStream = require_stream();
-    WebSocket.Server = require_websocket_server();
-    WebSocket.Receiver = require_receiver();
-    WebSocket.Sender = require_sender();
-    WebSocket.WebSocket = WebSocket;
-    WebSocket.WebSocketServer = WebSocket.Server;
-    module2.exports = WebSocket;
-  }
-});
-
 // src/server.ts
 var server_exports = {};
 __export(server_exports, {
   createWebSocketServer: () => createWebSocketServer
 });
 module.exports = __toCommonJS(server_exports);
-var import_ws = __toESM(require_ws());
+
+// ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/wrapper.mjs
+var import_stream = __toESM(require_stream(), 1);
+var import_receiver = __toESM(require_receiver(), 1);
+var import_sender = __toESM(require_sender(), 1);
+var import_websocket = __toESM(require_websocket(), 1);
+var import_websocket_server = __toESM(require_websocket_server(), 1);
+
+// src/server.ts
 function createWebSocketServer(server) {
-  const wss = new import_ws.WebSocketServer({
+  const wss = new import_websocket_server.default({
     noServer: true
   });
   server.on("upgrade", (req, socket, head) => {

@@ -1,0 +1,32 @@
+{
+  "name": "@myfrontframe/keepalive",
+  "version": "0.0.2",
+  "description": "react 中的状态保持组件",
+  "main": "lib/index.js",
+  "types": "lib.index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "pnpm build -- --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jitonghuan/myFrontFrame.git"
+  },
+  "keywords": [],
+  "author": "muxi.jth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jitonghuan/myFrontFrame/issues"
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
+  },
+  "homepage": "https://github.com/Jitonghuan/myFrontFrame#readme",
+  "devDependencies": {}
+}

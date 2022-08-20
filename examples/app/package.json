@@ -1,7 +1,6 @@
 {
-  "name": "app",
+  "name": "@examples/app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "build": "pnpm esbuild src/** --bundle --outdir=www",
@@ -9,14 +8,19 @@
     "serve": "cd www && serve"
   },
   "dependencies": {
+    "@alita/flow": "^3.0.1",
     "myfrontframe": "workspace:*",
+    "@myfrontframe/keepalive": "workspace:*",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react-dom": "^18.0.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "serve": "^13.0.2"
-  }
+  },
+  "description": ""
 }
