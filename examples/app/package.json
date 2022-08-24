@@ -5,7 +5,7 @@
   "scripts": {
     "build": "pnpm esbuild src/** --bundle --outdir=www",
     "dev": "myfrontframe dev",
-    "serve": "cd www && serve"
+    "serve": "cd dist && serve"
   },
   "dependencies": {
     "@alita/flow": "^3.0.1",

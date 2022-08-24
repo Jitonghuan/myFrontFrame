@@ -1,17 +1,17 @@
-# @malita/keepalive
+# @myfrontframe/keepalive
 
 react 中的状态保持组件
 
 ## 安装
 
 ```bash
-yarn add @malita/keepalive
+yarn add @myfrontframe/keepalive
 ```
 
 ## 使用
 
 ```tsx
-import KeepAliveLayout, { useKeepOutlets, KeepAliveContext } from '@malita/keepalive';
+import KeepAliveLayout, { useKeepOutlets, KeepAliveContext } from '@myfrontframe/keepalive';
 import { useLocation } from 'react-router-dom';
 import React, { useState, useContext } from 'react';
 

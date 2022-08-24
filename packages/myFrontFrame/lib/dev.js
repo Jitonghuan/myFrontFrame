@@ -27403,7 +27403,7 @@ module.exports = __toCommonJS(dev_exports);
 var import_express = __toESM(require_express2());
 var import_portfinder = __toESM(require_portfinder());
 var import_http = require("http");
-var import_esbuild = require("esbuild");
+var import_esbuild2 = require("esbuild");
 var import_path = __toESM(require("path"));
 
 // ../../node_modules/.pnpm/ws@8.8.1/node_modules/ws/wrapper.mjs
@@ -27451,8 +27451,100 @@ ${e.stack || e.message}`
   };
 }
 
+// src/styles.ts
+var import_esbuild = __toESM(require("esbuild"));
+function style() {
+  return {
+    name: "style",
+    setup({ onResolve, onLoad }) {
+      onResolve({
+        filter: /\.css$/,
+        namespace: "file"
+      }, (args) => {
+        return { path: args.path, namespace: "style-stub" };
+      });
+      onResolve(
+        {
+          filter: /\.css$/,
+          namespace: "style-stub"
+        },
+        (args) => {
+          return { path: args.path, namespace: "style-content" };
+        }
+      );
+      onResolve(
+        {
+          filter: /^__style_helper__$/,
+          namespace: "style-stub"
+        },
+        (args) => ({
+          path: args.path,
+          namespace: "style-helper",
+          sideEffects: false
+        })
+      );
+      onLoad(
+        {
+          filter: /.*/,
+          namespace: "style-helper"
+        },
+        () => __async(this, null, function* () {
+          return {
+            contents: `
+                    export function injectStyle(text) {
+                        if (typeof document !== 'undefined') {
+                          var style = document.createElement('style')
+                          var node = document.createTextNode(text)
+                          style.appendChild(node)
+                          document.head.appendChild(style)
+                        }
+                      }
+
+                    `
+          };
+        })
+      );
+      onLoad({ filter: /.*/, namespace: "style-stub" }, (args) => __async(this, null, function* () {
+        return {
+          contents: `
+                import { injectStyle } from "__style_helper__"
+              import css from ${JSON.stringify(args.path)}
+              injectStyle(css)
+                `
+        };
+      }));
+      onLoad(
+        {
+          filter: /.*/,
+          namespace: "style-content"
+        },
+        (args) => __async(this, null, function* () {
+          const { errors, warnings, outputFiles } = yield import_esbuild.default.build({
+            entryPoints: [args.path],
+            logLevel: "silent",
+            bundle: true,
+            write: false,
+            charset: "utf8",
+            minify: true,
+            loader: {
+              ".svg": "dataurl",
+              ".ttf": "dataurl"
+            }
+          });
+          return {
+            errors,
+            warnings,
+            contents: outputFiles[0].text,
+            loader: "text"
+          };
+        })
+      );
+    }
+  };
+}
+
 // src/constants.ts
-var DEFAULT_OUTDIR = "www";
+var DEFAULT_OUTDIR = "dist";
 var DEFAULT_ENTRY_POINT = "src/index.tsx";
 var DEFAULT_PLATFORM = "browser";
 var DEFAULT_HOST = "127.0.0.1";
@@ -27496,7 +27588,7 @@ var dev = () => __async(void 0, null, function* () {
   myfrontframeServe.listen(port, () => __async(void 0, null, function* () {
     console.log(`App listening at http://${DEFAULT_HOST}:${port}`);
     try {
-      yield (0, import_esbuild.build)({
+      yield (0, import_esbuild2.build)({
         format: "iife",
         logLevel: "error",
         outdir: esbuildOutput,
@@ -27515,6 +27607,7 @@ var dev = () => __async(void 0, null, function* () {
           "process.env.NODE_ENV": JSON.stringify("development")
         },
         external: ["esbuild"],
+        plugins: [style()],
         entryPoints: [import_path.default.resolve(cwd, DEFAULT_ENTRY_POINT)]
       });
     } catch (e) {

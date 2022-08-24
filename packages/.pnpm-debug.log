@@ -1,0 +1,16 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1,
+    "workspacePrefix": "/Users/jitonghuan/myFrontFrame"
+  },
+  "1 error pnpm": {
+    "code": "ERR_PNPM_GIT_NOT_UNCLEAN",
+    "hint": "If you want to disable Git checks on publish, set the \"git-checks\" setting to \"false\", or run again with \"--no-git-checks\".",
+    "err": {
+      "name": "pnpm",
+      "message": "Unclean working tree. Commit or stash changes first.",
+      "code": "ERR_PNPM_GIT_NOT_UNCLEAN",
+      "stack": "pnpm: Unclean working tree. Commit or stash changes first.\n    at Object.handler [as publish] (/snapshot/dist/pnpm.cjs)\n    at processTicksAndRejections (internal/process/task_queues.js:95:5)\n    at async /snapshot/dist/pnpm.cjs\n    at async run (/snapshot/dist/pnpm.cjs)\n    at async runPnpm (/snapshot/dist/pnpm.cjs)\n    at async /snapshot/dist/pnpm.cjs"
+    }
+  }
+}
