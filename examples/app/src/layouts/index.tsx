@@ -9,7 +9,7 @@ const Layout = () => {
     const element = useKeepOutlets();
     return (
         <Page className='myfrontframe-layout'>
-            <Header>当前路由: {pathname}</Header>
+            <Header>当前路由: {pathname},当前页面位置</Header>
             <Content>
                 {element}
             </Content>

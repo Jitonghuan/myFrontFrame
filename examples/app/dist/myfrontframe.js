@@ -986,7 +986,7 @@
             }
             return dispatcher;
           }
-          function useContext3(Context) {
+          function useContext2(Context) {
             var dispatcher = resolveDispatcher();
             {
               if (Context._context !== void 0) {
@@ -1000,7 +1000,7 @@
             }
             return dispatcher.useContext(Context);
           }
-          function useState4(initialState) {
+          function useState3(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1789,7 +1789,7 @@
           exports.startTransition = startTransition;
           exports.unstable_act = act;
           exports.useCallback = useCallback;
-          exports.useContext = useContext3;
+          exports.useContext = useContext2;
           exports.useDebugValue = useDebugValue;
           exports.useDeferredValue = useDeferredValue;
           exports.useEffect = useEffect;
@@ -1800,7 +1800,7 @@
           exports.useMemo = useMemo;
           exports.useReducer = useReducer;
           exports.useRef = useRef;
-          exports.useState = useState4;
+          exports.useState = useState3;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -23812,7 +23812,7 @@
         function useInRouterContext() {
           return React5.useContext(LocationContext) != null;
         }
-        function useLocation4() {
+        function useLocation3() {
           !useInRouterContext() ? invariant(
             false,
             "useLocation() may be used only in the context of a <Router> component."
@@ -23829,7 +23829,7 @@
           ) : void 0;
           let {
             pathname
-          } = useLocation4();
+          } = useLocation3();
           return React5.useMemo(() => matchPath(pattern, pathname), [pathname, pattern]);
         }
         function useNavigate() {
@@ -23846,7 +23846,7 @@
           } = React5.useContext(RouteContext);
           let {
             pathname: locationPathname
-          } = useLocation4();
+          } = useLocation3();
           let routePathnamesJson = JSON.stringify(matches.map((match) => match.pathnameBase));
           let activeRef = React5.useRef(false);
           React5.useEffect(() => {
@@ -23897,7 +23897,7 @@
           } = React5.useContext(RouteContext);
           let {
             pathname: locationPathname
-          } = useLocation4();
+          } = useLocation3();
           let routePathnamesJson = JSON.stringify(matches.map((match) => match.pathnameBase));
           return React5.useMemo(() => resolveTo(to, JSON.parse(routePathnamesJson), locationPathname), [to, routePathnamesJson, locationPathname]);
         }
@@ -23920,7 +23920,7 @@
 
 ` + ('Please change the parent <Route path="' + parentPath + '"> to <Route ') + ('path="' + (parentPath === "/" ? "*" : parentPath + "/*") + '">.'));
           }
-          let locationFromContext = useLocation4();
+          let locationFromContext = useLocation3();
           let location;
           if (locationArg) {
             var _parsedLocationArg$pa;
@@ -24009,7 +24009,7 @@
           });
           return null;
         }
-        function Outlet2(props) {
+        function Outlet(props) {
           return useOutlet(props.context);
         }
         function Route2(_props) {
@@ -24122,7 +24122,7 @@
         });
         exports2.MemoryRouter = MemoryRouter;
         exports2.Navigate = Navigate;
-        exports2.Outlet = Outlet2;
+        exports2.Outlet = Outlet;
         exports2.Route = Route2;
         exports2.Router = Router;
         exports2.Routes = Routes2;
@@ -24137,7 +24137,7 @@
         exports2.resolvePath = resolvePath;
         exports2.useHref = useHref;
         exports2.useInRouterContext = useInRouterContext;
-        exports2.useLocation = useLocation4;
+        exports2.useLocation = useLocation3;
         exports2.useMatch = useMatch;
         exports2.useNavigate = useNavigate;
         exports2.useNavigationType = useNavigationType;
@@ -24286,7 +24286,7 @@
         function isModifiedEvent(event) {
           return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
         }
-        const Link4 = /* @__PURE__ */ React5.forwardRef(function LinkWithRef(_ref4, ref) {
+        const Link3 = /* @__PURE__ */ React5.forwardRef(function LinkWithRef(_ref4, ref) {
           let {
             onClick,
             reloadDocument,
@@ -24316,7 +24316,7 @@
           }));
         });
         {
-          Link4.displayName = "Link";
+          Link3.displayName = "Link";
         }
         const NavLink = /* @__PURE__ */ React5.forwardRef(function NavLinkWithRef(_ref5, ref) {
           let {
@@ -24349,7 +24349,7 @@
           let style = typeof styleProp === "function" ? styleProp({
             isActive
           }) : styleProp;
-          return /* @__PURE__ */ React5.createElement(Link4, _extends({}, rest, {
+          return /* @__PURE__ */ React5.createElement(Link3, _extends({}, rest, {
             "aria-current": ariaCurrent,
             className,
             ref,
@@ -24588,7 +24588,7 @@
         });
         exports2.BrowserRouter = BrowserRouter;
         exports2.HashRouter = HashRouter2;
-        exports2.Link = Link4;
+        exports2.Link = Link3;
         exports2.NavLink = NavLink;
         exports2.createSearchParams = createSearchParams;
         exports2.unstable_HistoryRouter = HistoryRouter;
@@ -25564,7 +25564,7 @@
         });
         return isKeep;
       };
-      function useKeepOutlets3() {
+      function useKeepOutlets2() {
         const location = (0, react_router_dom_1.useLocation)();
         const element = (0, react_router_dom_1.useOutlet)();
         const { keepElements, keepalive } = (0, react_1.useContext)(exports.KeepAliveContext);
@@ -25574,7 +25574,7 @@
         }
         return (0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [Object.entries(keepElements.current).map(([pathname, element2]) => (0, jsx_runtime_1.jsx)("div", Object.assign({ style: { height: "100%", width: "100%", position: "relative", overflow: "hidden auto" }, className: "rumtime-keep-alive-layout", hidden: !(0, react_router_dom_1.matchPath)(location.pathname, pathname) }, { children: element2 }), pathname)), (0, jsx_runtime_1.jsx)("div", Object.assign({ hidden: isKeep, style: { height: "100%", width: "100%", position: "relative", overflow: "hidden auto" }, className: "rumtime-keep-alive-layout-no" }, { children: !isKeep && element }))] });
       }
-      exports.useKeepOutlets = useKeepOutlets3;
+      exports.useKeepOutlets = useKeepOutlets2;
       var KeepAliveLayout2 = (props) => {
         const { keepalive } = props, other = __rest(props, ["keepalive"]);
         const keepElements = react_1.default.useRef({});
@@ -26325,7 +26325,7 @@
     }
   });
 
-  // src/index.tsx
+  // node_modules/.myfrontframe/myfrontframe.tsx
   var import_react4 = __toESM(require_react());
   var import_client = __toESM(require_client());
   var import_react_router_dom4 = __toESM(require_main3());
@@ -26359,7 +26359,7 @@
     const element = (0, import_keepalive.useKeepOutlets)();
     return /* @__PURE__ */ import_react.default.createElement(import_flow.Page, {
       className: "myfrontframe-layout"
-    }, /* @__PURE__ */ import_react.default.createElement(import_flow.Header, null, "\u5F53\u524D\u8DEF\u7531: ", pathname), /* @__PURE__ */ import_react.default.createElement(import_flow.Content, null, element));
+    }, /* @__PURE__ */ import_react.default.createElement(import_flow.Header, null, "\u5F53\u524D\u8DEF\u7531: ", pathname, ",\u5F53\u524D\u9875\u9762\u4F4D\u7F6E"), /* @__PURE__ */ import_react.default.createElement(import_flow.Content, null, element));
   };
   var layouts_default2 = Layout;
 
@@ -26368,7 +26368,7 @@
   var import_react_router_dom2 = __toESM(require_main3());
 
   // style-content:/Users/jitonghuan/myFrontFrame/examples/app/src/pages/home.css
-  var home_default = ".myfrontframe-home{font-size:32px;background:blue}\n";
+  var home_default = ".myfrontframe-home{font-size:32px;background:rgb(172,172,233)}\n";
 
   // style-stub:/Users/jitonghuan/myFrontFrame/examples/app/src/pages/home.css
   injectStyle(home_default);
@@ -26385,7 +26385,7 @@
       className: "myfrontframe-home"
     }, count), /* @__PURE__ */ import_react2.default.createElement("p", null, /* @__PURE__ */ import_react2.default.createElement("button", {
       onClick: () => setCount((count2) => count2 + 1)
-    }, " Click Me! Add!")), /* @__PURE__ */ import_react2.default.createElement(import_react_router_dom2.Link, {
+    }, " Click Me! Add!!")), /* @__PURE__ */ import_react2.default.createElement(import_react_router_dom2.Link, {
       to: "/users"
     }, "go to Users"));
   };
@@ -26419,10 +26419,10 @@
   };
   var users_default2 = Users;
 
-  // src/index.tsx
+  // node_modules/.myfrontframe/myfrontframe.tsx
   var App = () => {
     return /* @__PURE__ */ import_react4.default.createElement(import_keepalive3.default, {
-      keepalive: [/./]
+      keepalive: [/./, "/users"]
     }, /* @__PURE__ */ import_react4.default.createElement(import_react_router_dom4.HashRouter, null, /* @__PURE__ */ import_react4.default.createElement(import_react_router_dom4.Routes, null, /* @__PURE__ */ import_react4.default.createElement(import_react_router_dom4.Route, {
       path: "/",
       element: /* @__PURE__ */ import_react4.default.createElement(layouts_default2, null)
