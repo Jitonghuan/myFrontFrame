@@ -11,10 +11,12 @@ import { DEFAULT_ENTRY_POINT, DEFAULT_OUTDIR, DEFAULT_TEMPLATE, } from './consta
 
 interface Options {
     cwd: string;
+    port: number;
 }
 export interface AppData {
     paths: {
         cwd: string;
+        port: number;
         absSrcPath: string;
         absPagesPath: string;
         absTmpPath: string;
@@ -25,7 +27,7 @@ export interface AppData {
     pkg: any,
 }
 export const getAppData = ({
-    cwd
+    cwd,port
 }: Options) => {
     return new Promise((resolve: (value: AppData) => void, rejects) => {
         // cwd，当前路径
@@ -44,6 +46,7 @@ export const getAppData = ({
 
         const paths = {
             cwd,
+            port,
             absSrcPath,
             absPagesPath,
             absTmpPath,

@@ -1,4 +1,4 @@
 "use strict";
 
-// src/index.js
-console.log("Hello myfrontframe!");
+// src/index.ts
+console.log("Hello myfrontframe!index here");

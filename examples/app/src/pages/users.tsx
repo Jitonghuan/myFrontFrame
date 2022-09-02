@@ -10,7 +10,7 @@ const Users = () => {
     return (
         <>
             <p> Users </p>
-            <p className='malita-users'>{count}</p>
+            <p className='myfrontframe-users'>{count}</p>
             <p><button onClick={() => setCount(count => count + 1)}> Click Me! Add!</button></p>
             <p><button onClick={() => dropByCacheKey(pathname)}> Click Me! Clear Cache!</button></p>
             <Link to='/'>go Home</Link>

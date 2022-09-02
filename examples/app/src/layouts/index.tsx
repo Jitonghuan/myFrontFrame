@@ -8,7 +8,7 @@ const Layout = () => {
     const { pathname } = useLocation();
     const element = useKeepOutlets();
     return (
-        <Page className='malita-layout'>
+        <Page className='myfrontframe-layout'>
             <Header>当前路由: {pathname}</Header>
             <Content>
                 {element}

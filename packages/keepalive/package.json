@@ -1,6 +1,6 @@
 {
-  "name": "@myfrontframe/keepalive",
-  "version": "0.0.2",
+  "name": "@myfrontframejs/keepalive",
+  "version": "0.0.3",
   "description": "react 中的状态保持组件",
   "main": "lib/index.js",
   "types": "lib.index.d.ts",

@@ -12,7 +12,7 @@ const Hello = () => {
                     setText('Hi!');
                 }}
             > {text} </p>
-            <p className='malita-home'>{count}</p>
+            <p className='myfrontframe-home'>{count}</p>
             <p><button onClick={() => setCount(count => count + 1)}> Click Me! Add!</button></p>
             <Link to='/users'>go to Users</Link>
         </>);

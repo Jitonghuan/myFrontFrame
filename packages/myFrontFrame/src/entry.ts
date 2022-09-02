@@ -10,6 +10,7 @@ import { existsSync, mkdir, writeFileSync } from 'fs';
 import path from 'path';
 import type { AppData } from './appData';
 import type { IRoute } from './routes';
+import type { UserConfig } from './config';
 
 let count = 1;
 const getRouteStr = (routes: IRoute[]) => {
@@ -28,8 +29,16 @@ const getRouteStr = (routes: IRoute[]) => {
     })
     return { routesStr, importStr };
 }
+const configStringify = (config: (string | RegExp)[]) => {
+    return config.map((item) => {
+        if (item instanceof RegExp) {
+            return item;
+        }
+        return `'${item}'`;
+    });
+};
 
-export const generateEntry = ({ appData, routes }: { appData: AppData; routes: IRoute[] }) => {
+export const generateEntry = ({ appData, routes,userConfig }: { appData: AppData; routes: IRoute[],userConfig: UserConfig }) => {
     return new Promise((resolve, rejects) => {
         count = 0;
         const { routesStr, importStr } = getRouteStr(routes);
@@ -37,12 +46,14 @@ export const generateEntry = ({ appData, routes }: { appData: AppData; routes: I
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter, Routes, Route, } from 'react-router-dom';
-import KeepAliveLayout from '@malita/keepalive';
+import KeepAliveLayout from '@myfrontframe/keepalive';
 ${importStr}
 
 const App = () => {
     return (
-        <KeepAliveLayout keepalive={[/./]}>
+        <KeepAliveLayout keepalive={[${configStringify(
+            userConfig?.keepalive ?? [],
+        )}]}>
             <HashRouter>
                 <Routes>
                     ${routesStr}
@@ -52,7 +63,7 @@ const App = () => {
     );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('malita'));
+const root = ReactDOM.createRoot(document.getElementById('myfrontframe'));
 root.render(React.createElement(App));
     `;
         try {

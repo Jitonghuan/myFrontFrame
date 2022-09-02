@@ -1,9 +1,11 @@
 import esbuild,{Plugin,} from 'esbuild';
+import path from 'path';
 // https://github.com/evanw/esbuild/issues/20#issuecomment-802269745
 export function style():Plugin{
     return {
         name:'style',
         setup({onResolve,onLoad}){
+            const cwd = process.cwd();
             //解决回调
             // onResolveAPI 旨在在setup函数内调用，并注册一个回调以在某些情况下触发。
             //用来处理路径相关的问题,此处拦截名为“style”的导入路径，不会被esbuild执行，
@@ -15,7 +17,12 @@ export function style():Plugin{
 
             onResolve({
                 filter:/\.css$/,namespace:'file'},(args)=>{
-                    return {path:args.path,namespace:"style-stub"};
+                    const absPath = path.resolve(
+                        cwd,
+                        path.relative(cwd, args.resolveDir),
+                        args.path,
+                    );
+                    return {path:absPath,namespace:"style-stub"};
             });
             // 将它们映射到文件系统位置。用“style-stub” 
             //使用命名空间标记它们，为这个插件保留它们。
