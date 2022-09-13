@@ -22,6 +22,7 @@ import { getRoutes } from './routes';
 import { getUserConfig } from './config';
 import { generateEntry } from './entry';
 import { generateHtml } from './html';
+import { getMockConfig } from './mock';
 
 export const dev = async () => {
     const cwd = process.cwd();
@@ -55,6 +56,21 @@ export const dev = async () => {
         const userConfig = await getUserConfig({
             appData, myfrontframeServe
         });
+        const mockConfig = await getMockConfig({
+            appData, myfrontframeServe
+        });
+
+        app.use((req, res, next) => {
+            const result = mockConfig?.[req.method]?.[req.url];
+            if (Object.prototype.toString.call(result) === "[object String]" || Object.prototype.toString.call(result) === "[object Array]" || Object.prototype.toString.call(result) === "[object Object]") {
+                res.json(result)
+            } else if (Object.prototype.toString.call(result) === "[object Function]") {
+                result(req, res);
+            } else {
+                next();
+            }
+        });
+
 
         // 获取 routes 配置
         const routes = await getRoutes({ appData });
