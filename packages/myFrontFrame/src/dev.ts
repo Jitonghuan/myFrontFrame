@@ -13,6 +13,7 @@ import { build } from 'esbuild';
 import fs from "fs";
 import path from "path";
 import { createWebSocketServer } from './server';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { style } from './styles';
 import { DEFAULT_ENTRY_POINT, DEFAULT_OUTDIR, DEFAULT_PLATFORM, DEFAULT_PORT, DEFAULT_HOST, DEFAULT_BUILD_PORT } from './constants';
 import { getAppData } from './appData';
@@ -62,6 +63,18 @@ export const dev = async () => {
         await generateEntry({ appData, routes, userConfig });
         // 生成 Html
         await generateHtml({ appData, userConfig });
+        if (userConfig.proxy) {
+            Object.keys(userConfig.proxy).forEach((key) => {
+                const proxyConfig = userConfig.proxy![key];
+                const target = proxyConfig.target;
+                if (target) {
+                    app.use(
+                        key,
+                        createProxyMiddleware(key, userConfig.proxy![key],),
+                    );
+                }
+            });
+        }
     }
     myfrontframeServe.on('REBUILD', async ({ appData }) => {
         await buildMain({ appData });

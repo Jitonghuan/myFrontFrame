@@ -3,11 +3,13 @@ import path from 'path';
 import { build } from 'esbuild';
 import type { AppData } from './appData';
 import type { Server } from 'http';
+import type { Options as ProxyOptions } from 'http-proxy-middleware';
 import { DEFAULT_CONFIG_FILE } from './constants';
 
 export interface UserConfig {
     title?: string;
     keepalive?: any[];
+    proxy?: { [key: string]: ProxyOptions };
 }
 export const getUserConfig = ({ appData, myfrontframeServe }: { appData: AppData; myfrontframeServe: Server; }) => {
     return new Promise(async (resolve: (value: UserConfig) => void, rejects) => {
