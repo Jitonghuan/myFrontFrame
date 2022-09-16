@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+//注意开头要添加脚本的解释程序，比如我们这里使用的是 node
+//这里我们使用一个 完成的 node 命令行解决方案 commander.js
 const {
     Command
 } = require('commander');
@@ -30,7 +32,7 @@ program.command('dev').description('框架开发命令').action(function() {
     const {
         dev
     } = require('../lib/dev');
-    dev();
+    dev();//在这里执行dev文件里的信息
 });
 
 program.parse(process.argv);

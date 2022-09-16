@@ -38,6 +38,7 @@ export const generateHtml = ({ appData, userConfig }: { appData: AppData; userCo
                 if (err) {
                     rejects(err)
                 }
+                //esbuild 提供了 writeFileSync/writeFile 对 code 进行编译
                 writeFileSync(htmlPath, content, 'utf-8');
                 resolve({})
             });

@@ -32,6 +32,7 @@ export const dev = async () => {
     });
 
     const output = path.resolve(cwd, DEFAULT_OUTDIR);
+    //提供主路径服务
     app.get('/', (_req, res,next) => {
         res.set('Content-Type', 'text/html');
         const htmlPath = path.join(output, 'index.html');
@@ -135,7 +136,7 @@ export const dev = async () => {
                 },
                 external: ['esbuild'],
                 plugins: [style()],
-                entryPoints: [appData.paths.absEntryPath],
+                entryPoints: [appData.paths.absEntryPath],//查找到正确的dev服务目录
             });
             // [Issues](https://github.com/evanw/esbuild/issues/805)
             // 查了很多资料，esbuild serve 不能响应 onRebuild， esbuild build 和 express 组合不能不写入文件
